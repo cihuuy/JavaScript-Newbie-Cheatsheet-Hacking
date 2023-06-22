@@ -6,7 +6,7 @@ Over time, as a dedicated tinkerer, I've embraced the wild and wonderful world o
 
 I'm no expert in JavaScript. Heck, I wouldn't even know where to start. But these haphazardly stumbled-upon techniques have served me well, and I reckon there might be a few nuggets of wisdom to be found in my "accidentally-on-purpose" explorations. Hence, the birth of this repository.
 
-This mish-mash of tips and tricks spans across various topics, without any particular focus on a specific level of expertise. They are simply based on my own exhilarating journey of eureka moments and facepalms. I won't be giving detailed lectures here - just quick, practical, ready-to-use snippets that you can plug into your own adventures in code. 
+This mish-mash of tips and tricks spans across various topics, without any particular focus on a specific level of expertise. They are simply based on my own exhilarating journey of eureka moments and facepalms. I won't be giving detailed lectures here - just quick, practical, ready-to-use snippets that you can plug into your own adventures in code.
 
 A note of caution though - these tips and tricks may not play nice with unauthorized or not-owned-by-you websites. They've been exclusively tested and tailored to my own online playgrounds. If you choose to release them into the wild, please be responsible and respectful of others' digital territories. I sternly discourage any and all forms of unauthorized activities.
 
@@ -18,18 +18,17 @@ Let's say it once again, my dear comrades: hack to learn, **NOT** learn to hack!
 
 ***
 
-## Table of Contents:
-
+Table of Contents:
 - [URL Wise](#url-wise)
   - [Extracting URLs from a Web Page](#extracting-urls-from-a-web-page)
-  - [Extracting URLs using Destructuring](#extracting-urls-using-destructuring-alternative-1)
-  - [Extracting URLs using the Spread Operator](#extracting-urls-using-the-spread-operator-alternative-2)
-  - [Extracting URLs using Array.from with Mapping](#extracting-urls-using-arrayfrom-with-mapping-alternative-3)
-  - [Extracting URLs using a for...of Loop](#extracting-urls-using-a-forof-loop-alternative-4)
+  - [Extracting URLs using Destructuring (Alternative 1)](#extracting-urls-using-destructuring-alternative-1)
+  - [Extracting URLs using the Spread Operator (Alternative 2)](#extracting-urls-using-the-spread-operator-alternative-2)
+  - [Extracting URLs using Array.from with Mapping (Alternative 3)](#extracting-urls-using-arrayfrom-with-mapping-alternative-3)
+  - [Extracting URLs using a for...of Loop (Alternative 4)](#extracting-urls-using-a-forof-loop-alternative-4)
   - [Find all src URLs](#find-all-src-urls)
   - [Get all URLs (XPath)](#get-all-urls-xpath)
   - [Get all URLs (jQuery)](#get-all-urls-jquery)
-  - [Get all URLs (Regular Expression)](#get-all-urls-alternative-7-regular-expression)
+  - [Get all URLs (Alternative 7: Regular Expression)](#get-all-urls-alternative-7-regular-expression)
   - [Get all URLs (Fetch API)](#get-all-urls-fetch-api)
   - [Get All API Endpoints from JavaScript Files](#get-all-api-endpoints-from-javascript-files)
   - [Extracting All Emails from a Web Page](#extracting-all-emails-from-a-web-page)
@@ -46,7 +45,7 @@ Let's say it once again, my dear comrades: hack to learn, **NOT** learn to hack!
   - [Get all hashtags from a webpage](#get-all-hashtags-from-a-webpage)
   - [Get URLs of all open tabs](#get-urls-of-all-open-tabs)
   - [Get URLs of all iframes on a page](#get-urls-of-all-iframes-on-a-page)
-  - [Get all URLs from CSS](#get-all-urls-from-css)
+  - [Get all URLs from CSS)](#get-all-urls-from-css)
   - [Extract URLs from Inline JavaScript](#extract-urls-from-inline-javascript)
   - [Extracting URLs from HTML Comments](#extracting-urls-from-html-comments)
   - [Extract URLs from SVG](#extract-urls-from-svg)
@@ -54,7 +53,16 @@ Let's say it once again, my dear comrades: hack to learn, **NOT** learn to hack!
   - [URL Redirection](#url-redirection)
   - [Add URL parameter](#add-url-parameter)
   - [Remove URL Parameter](#remove-url-parameter)
-  
+  - [Extract all URLs from a Website recursive (Separate Lines)](#extract-all-urls-from-a-website-recursive-separate-lines)
+  - [Extract all URLs from a Website (Filtered by Domain)](#extract-all-urls-from-a-website-filtered-by-domain)
+  - [Extract all URLs from a Website (External URLs Only)](#extract-all-urls-from-a-website-external-urls-only)
+  - [Extract all URLs from a Website (Unique URLs Only)](#extract-all-urls-from-a-website-unique-urls-only)
+  - [Extract all URLs from Images](#extract-all-urls-from-images)
+  - [Extract all URLs from Scripts](#extract-all-urls-from-scripts)
+  - [Extract all URLs from Stylesheets](#extract-all-urls-from-stylesheets)
+  - [Extract all URLs from AJAX or Fetch Requests](#extract-all-urls-from-ajax-or-fetch-requests)
+  - [Extract all URLs from Attachments or Downloadable Files](#extract-all-urls-from-attachments-or-downloadable-files)
+
 ***
 
 # URL Wise
@@ -75,6 +83,8 @@ Array.from(document.links, ({ href }) => href).forEach(console.log);
 
 ```javascript
 [...document.getElementsByTagName('a')].forEach(a => console.log(a.href));
+
+
 ```
 
 ### Extracting URLs using Array.from with Mapping (Alternative 3)
@@ -135,8 +145,6 @@ const html = document.documentElement.innerHTML;
 let match;
 while ((match = regex.exec(html))) {
   console.log(match[2]);
-
-
 }
 ```
 
@@ -212,8 +220,10 @@ Array.from(document.links).filter(a => a.hostname !== location.hostname).forEach
 ### Get all unique URLs from a web page
 
 ```javascript
-let uniqueURLs = [...new Set(Array.from(document.links).map(({ href }) => href))];
-console.log(uniqueURLs);
+let unique
+
+URLs = new Set(Array.from(document.links).map(({ href }) => href));
+uniqueURLs.forEach(url => console.log(url));
 ```
 
 ### Get all PDF files from a web page
@@ -225,39 +235,38 @@ Array.from(document.links).filter(a => a.href.endsWith('.pdf')).forEach(({ href 
 ### Get all file download links
 
 ```javascript
-Array.from(document.links).filter(a => a.download).forEach(({ href }) => console.log(href));
+Array.from(document.querySelectorAll('a[download]')).forEach(({ href }) => console.log(href));
 ```
 
 ### Get all mailto links
 
 ```javascript
-Array.from(document.links).filter(a => a.href.startsWith('mailto:')).forEach(({ href }) => console.log(href));
+Array.from(document.querySelectorAll('a[href^="mailto:"]')).forEach(({ href }) => console.log(href));
 ```
 
-### Get all tel links 
+### Get all tel links
 
 ```javascript
-Array.from(document.links).filter(a => a.href.startsWith('tel:')).forEach(({ href }) => console.log(href));
+Array.from(document.querySelectorAll('a[href^="tel:"]')).forEach(({ href }) => console.log(href));
 ```
 
 ### Get all URLs having certain text
 
 ```javascript
-Array.from(document.links).filter(a => a.textContent.includes('example')).forEach(({ href }) => console.log(href));
+Array.from(document.links).filter(a => a.innerText.includes('text')).forEach(({ href }) => console.log(href));
 ```
 
 ### Get all hashtags from a webpage
 
 ```javascript
-Array.from(document.links).filter(a => a.href.includes('#')).forEach(({ href }) => console.log(href));
+Array.from(document.querySelectorAll('a[href^="#"]')).forEach(({ href }) => console.log(href));
 ```
 
 ### Get URLs of all open tabs
 
 ```javascript
-// You need to run this in browser console not in the page
-chrome.tabs.query({}, function(tabs) { 
-  tabs.forEach(tab => console.log(tab.url)); 
+chrome.tabs.query({}, function(tabs) {
+  tabs.forEach(tab => console.log(tab.url));
 });
 ```
 
@@ -267,132 +276,452 @@ chrome.tabs.query({}, function(tabs) {
 Array.from(document.querySelectorAll('iframe')).forEach(({ src }) => console.log(src));
 ```
 
-### Get all URLs from CSS 
+### Get all URLs from CSS
 
 ```javascript
-const stylesheets = [...document.styleSheets];
-stylesheets.forEach(sheet => {
-  const rules = [...sheet.cssRules];
-  rules.forEach(rule => {
-    const matches = rule.cssText.match(/url\((.*?)\)/g);
-    if (matches) {
-      matches.forEach(url => console.log(url));
-    }
-  });
-});
-```
-
-### Extract URLs from Inline JavaScript 
-
-```javascript
-const scripts = Array.from(document.scripts).filter(script => !script.src);
-scripts.forEach(script => {
-  const matches = script.textContent.match(/http[s]?:\/\/[^"',\s)]+/g);
-  if (matches) {
-    matches.forEach(url => console.log(url));
+Array.from(document.styleSheets).forEach(styleSheet => {
+  const cssRules = styleSheet.cssRules || styleSheet.rules;
+  if (cssRules) {
+    Array.from(cssRules).forEach(rule => {
+      const urlMatches = rule.cssText.match(/url\(["']?(.*?)["']?\)/g);
+      if (urlMatches) {
+        urlMatches.forEach(url => console.log(url.match(/url\(["']?(.*?)["']?\)/)[1]));
+      }
+    });
   }
 });
 ```
 
-### Extracting URLs from HTML Comments 
+### Extract URLs from Inline JavaScript
 
 ```javascript
-const comments = [];
-const walk = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT, null, false);
-let node;
-while ((node = walk.nextNode())) {
-  comments.push(node.data);
+const regex = /url\s*\(\s*(['"]?)(.*?)\1\s*\)/g;
+const html = document.documentElement.innerHTML;
+let match;
+while ((match = regex.exec(html))) {
+  console.log(match[2]);
 }
-comments.forEach(comment => {
-  const matches = comment.match(/http[s]?:\/\/[^'",\s)]+/g);
-  if (matches) {
-    matches.forEach(url => console.log(url));
-  }
-});
+```
+
+### Extracting URLs from HTML Comments
+
+```javascript
+const regex = /<!--.*?(\bhttps?:\/\/\S+)\b.*?-->/g;
+const html = document.documentElement.innerHTML;
+let match;
+while ((match = regex.exec(html))) {
+  console.log(match[1]);
+}
 ```
 
 ### Extract URLs from SVG
 
 ```javascript
-Array.from(document.querySelectorAll('svg')).forEach(svg => {
-  const matches = svg.outerHTML.match(/http[s]?:\/\/[^'",\s)]+/g);
-  if (matches) {
-    matches.forEach(url => console.log(url));
-  }
-});
+Array.from(document.getElementsByTagName('image')).forEach(({ href }) => console.log(href));
 ```
 
 ### Extracting Specific Parts of a URL
 
-
 ```javascript
-// Extract the domain from a URL
-const extractDomain = () => {
-  const url = window.location.href;
-  const urlObject = new URL(url);
-  return urlObject.hostname;
-};
+function extractDomain(url) {
+  const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
+  const matches = url.match(domainRegex);
+  return matches ? matches[1] : null;
+}
 
-const domain = extractDomain();
-console.log(domain);
+function extractProtocol(url) {
+  const protocolRegex = /^(https?:\/\/)/;
+  const matches = url.match(protocolRegex);
+  return matches ? matches[1] : null;
+}
 
-// Extract the path from a URL
-const extractPath = () => {
-  const url = window.location.href;
-  const urlObject = new URL(url);
-  return urlObject.pathname;
-};
+function extractPath(url) {
+  const pathRegex = /^(?:https?:\/\/)?[^\/]+(\/.*)/;
+  const matches = url.match(pathRegex);
+  return matches ? matches[1] : null;
+}
 
-const path = extractPath();
-console.log(path);
+const url = 'https://www.example.com/path/to/resource?query=string#fragment';
+
+console.log('Domain:', extractDomain(url));
+console.log('Protocol:', extractProtocol(url));
+console.log('Path:', extractPath(url));
 ```
-
 
 ### URL Redirection
 
-
 ```javascript
-// Perform a URL redirect with a delay
-const redirectToURL = (url, delay = 2000) => {
-  setTimeout(() => {
-    window.location.href = url;
-  }, delay);
-};
-
-redirectToURL('https://github.com/wuseman', 3000);
+window.location.href = 'https://www.newurl.com';
 ```
-
 
 ### Add URL parameter
 
-
 ```javascript
-const addOrUpdateURLParameter = (key, value) => {
-  // Function to add or update a URL parameter with the provided key and value
-  // Returns the updated URL with the modified parameter
-  const url = window.location.href;
-  const urlObject = new URL(url);
-  urlObject.searchParams.set(key, value);
-  return urlObject.href;
-};
+function addUrlParameter(url, parameterName, parameterValue) {
+  const separator = url.includes('?') ? '&' : '?';
+  return url + separator + encodeURIComponent(parameterName) + '=' + encodeURIComponent(parameterValue);
+}
 
-const updatedURL = addOrUpdateURLParameter('param2', 'value2');
-console.log(updatedURL);
+const originalUrl = 'https://www.github.com/wuseman';
+const modifiedUrl = addUrlParameter(originalUrl, 'param', 'value');
+console.log(modifiedUrl);
 ```
-
 
 ### Remove URL Parameter
 
 ```javascript
-const removeURLParameter = (key) => {
-  // Function to remove a URL parameter with the provided key
-  // Returns the updated URL with the parameter removed
-  const url = window.location.href;
-  const urlObject = new URL(url);
-  urlObject.searchParams.delete(key);
-  return urlObject.href;
-};
+function removeUrlParameter(url, parameterName) {
+  const urlParts = url.split('?');
+  if (urlParts.length >= 2) {
+    const prefix = encodeURIComponent(parameterName) + '=';
+    const parameters = urlParts[1].split(/[&;]/g);
 
-const modifiedURL = removeURLParameter('param2');
-console.log(modifiedURL);
+    for (let i = parameters.length - 1; i >= 0; i--) {
+      if (parameters[i].lastIndexOf(prefix, 0) !== -1) {
+        parameters.splice(i, 1);
+      }
+    }
+
+    if (parameters.length > 0) {
+      return urlParts[0] + '?' + parameters.join('&');
+    } else {
+      return urlParts[0];
+    }
+  }
+  return url;
+}
+
+const originalUrl = 'https://www.somesite.com?param1=value1&param2=value2';
+const modifiedUrl = removeUrlParameter(originalUrl, 'param2');
+console.log(modifiedUrl);
+```
+
+### Extract all URLs from a Website recursive (Separate Lines)
+
+```javascript
+// Function to extract the domain from a URL
+function extractDomain(url) {
+  const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
+  const matches = url.match(domainRegex);
+  return matches ? matches[1] : null;
+}
+
+// Function to extract all URLs from a website and return them as separate lines
+function extractURLsSeparateLines() {
+  const allURLs = [];
+
+  // Retrieve all anchor elements on the page
+  const anchorElements = document.getElementsByTagName('a');
+
+  // Extract URLs
+  for (let i = 0; i < anchorElements.length; i++) {
+    const href = anchorElements[i].href;
+    const domain = extractDomain(href);
+
+    // Filter out external URLs if needed
+    if (domain !== null) {
+      allURLs.push(href);
+    }
+  }
+
+  return allURLs;
+}
+
+// Recursive function to crawl all pages of the website
+function crawlWebsite(currentURL) {
+  // Create a new XMLHttpRequest object
+  const xhr = new XMLHttpRequest();
+
+  // Callback function for handling the response
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Extract URLs from the current page
+      const urls = extractURLsSeparateLines();
+
+      // Log the extracted URLs on separate lines in the console
+      console.log(`Extracted URLs from ${currentURL}:`);
+      console.log(urls.join('\n'));
+
+      // Extract and crawl URLs from child pages
+      const domain = extractDomain(currentURL);
+      const links = Array.from(new Set(urls.filter(url => extractDomain(url) === domain)));
+
+      links.forEach(link => {
+        const absoluteURL = new URL(link, currentURL).href;
+        crawlWebsite(absoluteURL);
+      });
+    }
+  };
+
+  // Open the current URL
+  xhr.open('GET', currentURL);
+  xhr.send();
+}
+
+// Call the function to start crawling the website from the current page
+crawlWebsite(window.location.href);
+```
+
+### Extract all URLs from a Website (Filtered by Domain)
+
+```javascript
+// Function to extract the domain from a URL
+function extractDomain(url) {
+  const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
+  const matches = url.match(domainRegex);
+  return matches ? matches[1] : null;
+}
+
+// Function to extract all URLs from a website filtered by a specific domain
+function extractURLsByDomain(domain) {
+  const allURLs = [];
+
+  // Retrieve all anchor elements on the page
+  const anchorElements = document.getElementsByTagName('a');
+
+  // Extract URLs
+  for (let i = 0; i < anchorElements.length; i++) {
+    const href = anchorElements[i].href;
+    const anchorDomain = extractDomain(href);
+
+    // Filter URLs by the specified domain
+    if (anchorDomain !== null && anchorDomain.includes(domain)) {
+      allURLs.push(href);
+    }
+  }
+
+  return allURLs;
+}
+
+// Specify the domain to filter URLs
+const targetDomain = 'github.com/wuseman';
+
+// Call the function to extract URLs filtered by the domain
+const filteredURLs = extractURLsByDomain(targetDomain);
+
+// Log the extracted URLs to the console
+console.log(`Extracted URLs for domain ${targetDomain}:`, filteredURLs);
+```
+
+### Extract all URLs from a Website (External URLs Only)
+
+```javascript
+// Function to extract the domain from a URL
+function extractDomain(url) {
+  const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
+  const matches = url.match(domainRegex);
+  return matches ? matches[1] : null;
+}
+
+// Function to extract all external URLs from a website
+function extractExternalURLs() {
+  const allURLs = [];
+
+  // Retrieve all anchor elements on the page
+  const anchorElements = document.getElementsByTagName('a');
+
+  // Extract URLs
+  for (let i = 0; i < anchorElements.length; i++) {
+    const href = anchorElements[i].href;
+    const domain = extractDomain(href);
+
+    // Filter out internal URLs by comparing domains
+    if (domain !== null && !domain.includes(window.location.hostname)) {
+      allURLs.push(href);
+    }
+  }
+
+  return allURLs;
+}
+
+// Call the function to extract external URLs
+const externalURLs = extractExternalURLs();
+
+// Log the extracted external URLs to the console
+console.log('Extracted External URLs:', externalURLs);
+```
+
+### Extract all URLs from a Website (Unique URLs Only)
+
+```javascript
+// Function to extract the domain from a URL
+function extractDomain(url) {
+  const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
+  const matches = url.match(domainRegex);
+  return matches ? matches[1] : null;
+}
+
+// Function to extract all unique URLs from a website
+function extractUniqueURLs() {
+  const allURLs = [];
+
+  // Retrieve all anchor elements on the page
+  const anchorElements = document.getElementsByTagName('a');
+
+  // Extract URLs
+  for (let i = 0; i < anchorElements.length; i++) {
+    const href = anchorElements[i].href;
+    const domain = extractDomain(href);
+
+    // Check if the URL is already in the array
+    if (allURLs.indexOf(href) === -1) {
+      allURLs.push(href);
+    }
+  }
+
+  return allURLs;
+}
+
+// Call the function to extract unique URLs
+const uniqueURLs = extractUniqueURLs();
+
+// Log the extracted unique URLs to the console
+console.log('
+
+Extracted Unique URLs:', uniqueURLs);
+```
+
+### Extract all URLs from Images
+
+```javascript
+// Function to extract all URLs from images on a website
+function extractImageURLs() {
+  const allURLs = [];
+
+  // Retrieve all image elements on the page
+  const imageElements = document.getElementsByTagName('img');
+
+  // Extract URLs
+  for (let i = 0; i < imageElements.length; i++) {
+    const src = imageElements[i].src;
+
+    // Add the image URL to the array
+    allURLs.push(src);
+  }
+
+  return allURLs;
+}
+
+// Call the function to extract image URLs
+const imageURLs = extractImageURLs();
+
+// Log the extracted image URLs to the console
+console.log('Extracted Image URLs:', imageURLs);
+```
+
+### Extract all URLs from Scripts
+
+```javascript
+// Function to extract all URLs from scripts on a website
+function extractScriptURLs() {
+  const allURLs = [];
+
+  // Retrieve all script elements on the page
+  const scriptElements = document.getElementsByTagName('script');
+
+  // Extract URLs
+  for (let i = 0; i < scriptElements.length; i++) {
+    const src = scriptElements[i].src;
+
+    // Add the script URL to the array
+    allURLs.push(src);
+  }
+
+  return allURLs;
+}
+
+// Call the function to extract script URLs
+const scriptURLs = extractScriptURLs();
+
+// Log the extracted script URLs to the console
+console.log('Extracted Script URLs:', scriptURLs);
+```
+
+### Extract all URLs from Stylesheets
+
+```javascript
+// Function to extract all URLs from stylesheets on a website
+function extractStylesheetURLs() {
+  const allURLs = [];
+
+  // Retrieve all link elements on the page
+  const linkElements = document.getElementsByTagName('link');
+
+  // Extract URLs
+  for (let i = 0; i < linkElements.length; i++) {
+    const href = linkElements[i].href;
+
+    // Add the stylesheet URL to the array
+    allURLs.push(href);
+  }
+
+  return allURLs;
+}
+
+// Call the function to extract stylesheet URLs
+const stylesheetURLs = extractStylesheetURLs();
+
+// Log the extracted stylesheet URLs to the console
+console.log('Extracted Stylesheet URLs:', stylesheetURLs);
+```
+
+### Extract all URLs from AJAX or Fetch Requests
+
+```javascript
+// Function to extract all URLs from dynamically loaded resources via AJAX or fetch requests
+function extractDynamicURLs(urls) {
+  const allURLs = [];
+
+  // Retrieve all AJAX or fetch request URLs
+  const requestURLs = [...urls];
+
+  // Extract URLs
+  for (let i = 0; i < requestURLs.length; i++) {
+    const url = requestURLs[i];
+
+    // Add the URL to the array
+    allURLs.push(url);
+  }
+
+  return allURLs;
+}
+
+// Example array of AJAX or fetch request URLs
+const ajaxURLs = ['https://somesite.com/api/data', 'https://somesite.com/api/users'];
+
+// Call the function to extract URLs from AJAX or fetch requests
+const dynamicURLs = extractDynamicURLs(ajaxURLs);
+
+// Log the extracted URLs to the console
+console.log('Extracted URLs from AJAX or Fetch Requests:', dynamicURLs);
+```
+
+### Extract all URLs from Attachments or Downloadable Files
+
+```javascript
+// Function to extract all URLs from attachments or downloadable files on a website
+function extractAttachmentURLs() {
+  const allURLs = [];
+
+  // Retrieve all attachment or downloadable file elements on the page
+  const attachmentElements = document.querySelectorAll('a[download], a[href*=".pdf
+
+"], a[href*=".doc"], a[href*=".xls"], a[href*=".zip"]');
+
+  // Extract URLs
+  for (let i = 0; i < attachmentElements.length; i++) {
+    const href = attachmentElements[i].href;
+
+    // Add the attachment URL to the array
+    allURLs.push(href);
+  }
+
+  return allURLs;
+}
+
+// Call the function to extract attachment URLs
+const attachmentURLs = extractAttachmentURLs();
+
+// Log the extracted attachment URLs to the console
+console.log('Extracted Attachment URLs:', attachmentURLs);
 ```
