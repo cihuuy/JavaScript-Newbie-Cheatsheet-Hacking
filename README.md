@@ -18,53 +18,6 @@ Let's say it once again, my dear comrades: hack to learn, **NOT** learn to hack!
 
 ***
 
-Table of Contents:
-- [URL Wise](#url-wise)
-  - [Extracting URLs from a Web Page](#extracting-urls-from-a-web-page)
-  - [Extracting URLs using Destructuring (Alternative 1)](#extracting-urls-using-destructuring-alternative-1)
-  - [Extracting URLs using the Spread Operator (Alternative 2)](#extracting-urls-using-the-spread-operator-alternative-2)
-  - [Extracting URLs using Array.from with Mapping (Alternative 3)](#extracting-urls-using-arrayfrom-with-mapping-alternative-3)
-  - [Extracting URLs using a for...of Loop (Alternative 4)](#extracting-urls-using-a-forof-loop-alternative-4)
-  - [Find all src URLs](#find-all-src-urls)
-  - [Get all URLs (XPath)](#get-all-urls-xpath)
-  - [Get all URLs (jQuery)](#get-all-urls-jquery)
-  - [Get all URLs (Alternative 7: Regular Expression)](#get-all-urls-alternative-7-regular-expression)
-  - [Get all URLs (Fetch API)](#get-all-urls-fetch-api)
-  - [Get All API Endpoints from JavaScript Files](#get-all-api-endpoints-from-javascript-files)
-  - [Extracting All Emails from a Web Page](#extracting-all-emails-from-a-web-page)
-  - [Get all image URLs from a web page](#get-all-image-urls-from-a-web-page)
-  - [Get all CSS File URLs](#get-all-css-file-urls)
-  - [Get all internal URLs from a web page](#get-all-internal-urls-from-a-web-page)
-  - [Get all external URLs from a web page](#get-all-external-urls-from-a-web-page)
-  - [Get all unique URLs from a web page](#get-all-unique-urls-from-a-web-page)
-  - [Get all PDF files from a web page](#get-all-pdf-files-from-a-web-page)
-  - [Get all file download links](#get-all-file-download-links)
-  - [Get all mailto links](#get-all-mailto-links)
-  - [Get all tel links](#get-all-tel-links)
-  - [Get all URLs having certain text](#get-all-urls-having-certain-text)
-  - [Get all hashtags from a webpage](#get-all-hashtags-from-a-webpage)
-  - [Get URLs of all open tabs](#get-urls-of-all-open-tabs)
-  - [Get URLs of all iframes on a page](#get-urls-of-all-iframes-on-a-page)
-  - [Get all URLs from CSS)](#get-all-urls-from-css)
-  - [Extract URLs from Inline JavaScript](#extract-urls-from-inline-javascript)
-  - [Extracting URLs from HTML Comments](#extracting-urls-from-html-comments)
-  - [Extract URLs from SVG](#extract-urls-from-svg)
-  - [Extracting Specific Parts of a URL](#extracting-specific-parts-of-a-url)
-  - [URL Redirection](#url-redirection)
-  - [Add URL parameter](#add-url-parameter)
-  - [Remove URL Parameter](#remove-url-parameter)
-  - [Extract all URLs from a Website recursive (Separate Lines)](#extract-all-urls-from-a-website-recursive-separate-lines)
-  - [Extract all URLs from a Website (Filtered by Domain)](#extract-all-urls-from-a-website-filtered-by-domain)
-  - [Extract all URLs from a Website (External URLs Only)](#extract-all-urls-from-a-website-external-urls-only)
-  - [Extract all URLs from a Website (Unique URLs Only)](#extract-all-urls-from-a-website-unique-urls-only)
-  - [Extract all URLs from Images](#extract-all-urls-from-images)
-  - [Extract all URLs from Scripts](#extract-all-urls-from-scripts)
-  - [Extract all URLs from Stylesheets](#extract-all-urls-from-stylesheets)
-  - [Extract all URLs from AJAX or Fetch Requests](#extract-all-urls-from-ajax-or-fetch-requests)
-  - [Extract all URLs from Attachments or Downloadable Files](#extract-all-urls-from-attachments-or-downloadable-files)
-
-***
-
 # URL Wise
 
 ### Extracting URLs from a Web Page
