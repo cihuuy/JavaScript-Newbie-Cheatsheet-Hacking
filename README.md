@@ -184,13 +184,13 @@ while ((match = regex.exec(html))) {
 }
 ```
 
-### Get all image URLs from a web page (Alternative 11)
+### Get all image URLs from a web page
 
 ```javascript
 Array.from(document.images).forEach(({ src }) => console.log(src));
 ```
 
-### Get all CSS File URLs (Alternative 12)
+### Get all CSS File URLs
 
 ```javascript
 Array.from(document.styleSheets).forEach(({ href }) => console.log(href));
