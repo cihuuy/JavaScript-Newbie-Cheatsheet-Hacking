@@ -1,18 +1,25 @@
 # JavaScript - Newbie Cheatsheet | Hacking
 
-Welcome, fellow coding enthusiasts, to the JavaScript Newbie Cheatsheet Hacking repository! I'm just a JavaScript newbie, bumbling and stumbling my way through the mesmerizing maze of coding. Along the way, I've managed to bungle into some pretty handy tips and tricks, and in the spirit of sharing, I've decided to spill all my beans right here!
+<details>
 
-Over time, as a dedicated tinkerer, I've embraced the wild and wonderful world of JavaScript, using it to poke and prod my own websites, tickle my routers (with their express consent, of course), and more. My syntax? Far from perfect. My code? A delightful hot mess of "wuziduzi world" meets "wuseman's spaghetti that just somehow works". And yet, the discoveries I've made have been astonishing.
+  <summary><code>About</code></summary>
 
-I'm no expert in JavaScript. Heck, I wouldn't even know where to start. But these haphazardly stumbled-upon techniques have served me well, and I reckon there might be a few nuggets of wisdom to be found in my "accidentally-on-purpose" explorations. Hence, the birth of this repository.
+  Welcome, fellow coding enthusiasts, to the JavaScript Newbie Cheatsheet Hacking repository! I'm just a JavaScript newbie, bumbling and stumbling my way through the mesmerizing maze of coding. Along the way, I've managed to bungle into some pretty handy tips and tricks, and in the spirit of sharing, I've decided to spill all my beans right here!
 
-This mish-mash of tips and tricks spans across various topics, without any particular focus on a specific level of expertise. They are simply based on my own exhilarating journey of eureka moments and facepalms. I won't be giving detailed lectures here - just quick, practical, ready-to-use snippets that you can plug into your own adventures in code.
+  Over time, as a dedicated tinkerer, I've embraced the wild and wonderful world of JavaScript, using it to poke and prod my own websites, tickle my routers (with their express consent, of course), and more. My syntax? Far from perfect. My code? A delightful hot mess of "wuziduzi world" meets "wuseman's spaghetti that just somehow works". And yet, the discoveries I've made have been astonishing.
 
-A note of caution though - these tips and tricks may not play nice with unauthorized or not-owned-by-you websites. They've been exclusively tested and tailored to my own online playgrounds. If you choose to release them into the wild, please be responsible and respectful of others' digital territories. I sternly discourage any and all forms of unauthorized activities.
+  I'm no expert in JavaScript. Heck, I wouldn't even know where to start. But these haphazardly stumbled-upon techniques have served me well, and I reckon there might be a few nuggets of wisdom to be found in my "accidentally-on-purpose" explorations. Hence, the birth of this repository.
 
-So, without further ado, enjoy this hotchpotch of JavaScript tips and tricks, handpicked from my personal adventures. If you'd like to contribute, that's great! Just make sure to add your bits in the right order. Spotted a bug? Let me know! I'm always up for a good bug hunt.
+  This mish-mash of tips and tricks spans across various topics, without any particular focus on a specific level of expertise. They are simply based on my own exhilarating journey of eureka moments and facepalms. I won't be giving detailed lectures here - just quick, practical, ready-to-use snippets that you can plug into your own adventures in code.
 
-Let's say it once again, my dear comrades: hack to learn, **NOT** learn to hack!
+  A note of caution though - these tips and tricks may not play nice with unauthorized or not-owned-by-you websites. They've been exclusively tested and tailored to my own online playgrounds. If you choose to release them into the wild, please be responsible and respectful of others' digital territories. I sternly discourage any and all forms of unauthorized activities.
+
+  So, without further ado, enjoy this hotchpotch of JavaScript tips and tricks, handpicked from my personal adventures. If you'd like to contribute, that's great! Just make sure to add your bits in the right order. Spotted a bug? Let me know! I'm always up for a good bug hunt.
+</details>
+
+***
+
+Remember my dear comrades: hack to learn, **NOT** learn to hack!
 
 **Happy hacking!**
 
@@ -677,4 +684,93 @@ const attachmentURLs = extractAttachmentURLs();
 
 // Log the extracted attachment URLs to the console
 console.log('Extracted Attachment URLs:', attachmentURLs);
+```
+
+### Locate Users by ID Without Overloading the Website
+
+This approach is designed to efficiently find the highest user ID when we do not have a clear starting point. It aims to avoid putting excessive load on the server, thus preventing a potentially negative impact on the site's performance.
+
+```javascript
+async function crawlUsersById(startId, endId) {
+  for (let id = startId; id <= endId; id++) {
+    const url = `https://somewebsite/api/v1/users/${id}`;
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "accept": "application/json, text/plain, */*",
+          "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        },
+        referrer: `https://somewebsite.org/user/${id}/edit`,
+        referrerPolicy: "strict-origin-when-cross-origin",
+        method: "GET",
+        mode: "cors",
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log(userData);
+        // Process the userData as needed
+      } else {
+        console.error(`Error retrieving user data for ID: ${id}`);
+      }
+    } catch (error) {
+      console.error(`Error fetching user data for ID: ${id}`, error);
+    }
+  }
+}
+
+// Usage: crawlUsersById(startId, endId);
+crawlUsersById(1, 999999);
+```
+
+
+### Optimized Search for the Last User ID on a Website
+
+This method uses a balanced approach to discover the largest user ID on a website, when there is no initial indication of its value. The strategy aims to minimize the potential strain on the website by avoiding excessive requests.
+
+```javascript
+async function findLastUser() {
+  let startId = 10000;
+  let endId = 12000;
+  let lastUser = null;
+
+  while (startId <= endId) {
+    const midId = Math.floor((startId + endId) / 2);
+    const url = `https://somewebsite/api/v1/users/${midId}`;
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "accept": "application/json, text/plain, */*",
+          "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        },
+        referrer: `https://somewebsite/user/${midId}/edit`,
+        referrerPolicy: "strict-origin-when-cross-origin",
+        method: "GET",
+        mode: "cors",
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        lastUser = midId;
+        startId = midId + 1;
+      } else if (response.status === 404) {
+        endId = midId - 1;
+      } else {
+        console.error(`Error retrieving user data for ID: ${midId}`);
+        break;
+      }
+    } catch (error) {
+      console.error(`Error fetching user data for ID: ${midId}`, error);
+      break;
+    }
+  }
+
+  console.log(`Last user found with ID: ${lastUser}`);
+}
+
+// Usage: findLastUser();
+findLastUser();
 ```
