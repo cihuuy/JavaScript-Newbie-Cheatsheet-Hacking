@@ -900,8 +900,776 @@ Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
 // Usage: findLastUser();
 findLastUser();
 ```
+</details>
+
+# Crawling
+
+
+<details>
+  <summary>Dump all URLs on visited website and start crawl with URLs as base</summary>
+
+The provided code demonstrates a web crawling script that extracts URLs from a visited website and uses them as a base for further crawling. The script utilizes JavaScript and employs a breadth-first search strategy.
+
+```javascript
+let c = [];
+let p = ['https://www.nr1.nu/'];
+
+async function a() {
+  while (p.length) {
+    let u = p.pop();
+    if (!c.includes(u)) {
+      console.log(`Crawling ${u}`);
+      try {
+        let r = await fetch(u);
+        let t = await r.text();
+        let d = new DOMParser().parseFromString(t, 'text/html').getElementsByTagName('a');
+        for (let a of d) {
+          if (!c.includes(a.href) && !p.includes(a.href)) {
+            p.push(a.href);
+          }
+        }
+      } catch (e) {
+        console.error(`Failed to crawl "${u}": ${e}`);
+      }
+      c.push(u);
+    }
+  }
+  console.log('Finished crawling', c);
+}
+
+a();
+```
+</details>
+
+
+
+
+
+<details>
+  <summary>Extracting URLs from the Current Page and Initiating a Single-Threaded Crawl</summary>
+
+* Elapsed time: 32918 ms
+
+```javascript
+let c = [];
+let p = ['https://www.nr1.nu/'];
+
+async function a() {
+  let s = new Date().getTime();
+  while (p.length) {
+    let u = p.pop();
+    if (!c.includes(u)) {
+      console.log(`Crawling ${u}`);
+      try {
+        let r = await fetch(u);
+        let t = await r.text();
+        let d = new DOMParser().parseFromString(t, 'text/html').getElementsByTagName('a');
+        for (let a of d) {
+          if (!c.includes(a.href) && !p.includes(a.href)) {
+            p.push(a.href);
+          }
+        }
+      } catch (e) {
+        console.error(`Failed to crawl "${u}": ${e}`);
+      }
+      c.push(u);
+    }
+  }
+  let e = new Date().getTime();
+  console.log('Finished crawling', c);
+  console.log('Elapsed time:', e - s, 'ms');
+}
+
+a();
+```
 
 </details>
 
 
-## Crawling 
+
+<details>
+  <summary>Efficient Crawling Method for Faster Execution</summary>
+
+This code presents an alternative crawling approach that improves efficiency and reduces execution time. By utilizing XMLHttpRequest, the script performs crawling in a faster manner, making it suitable for large-scale web crawling tasks.
+
+Elapsed time: 5002.60 ms
+
+```javascript
+var crawledUrls = new Set();
+var urls = [];
+
+function crawlUrl(url) {
+  if (crawledUrls.has(url)) return;
+
+  crawledUrls.add(url);
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var responseText = xhr.responseText;
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(responseText, 'text/html');
+      var anchors = doc.getElementsByTagName('a');
+      
+      for (var i = 0; i < anchors.length; i++) {
+        var href = anchors[i].href;
+        if (!crawledUrls.has(href)) {
+          urls.push(href);
+          crawlUrl(href);
+        }
+      }
+    }
+  };
+
+  xhr.open('GET', url, true);
+  xhr.send();
+}
+
+crawlUrl(window.location.href);
+
+setTimeout(function() {
+  console.log(urls);
+}, 5000); // Adjust the timeout as needed to wait for the crawling to complete
+```
+</details>
+
+
+<details>
+  <summary>Single-Threaded Website Crawling</summary>
+
+This code represents a single-threaded approach to crawl an entire website. It utilizes a depth-first crawling strategy to systematically explore the website's pages.
+
+**EXTREME**: Crawling completed in 3131.1999999999534 milliseconds.
+
+```javascript
+var crawledUrls = new Set();
+var startTime = performance.now();
+var requestDelay = 200
+
+; // Delay between each request in milliseconds
+
+function crawlUrl(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var responseText = xhr.responseText;
+          var newUrls = extractUrlsFromResponse(responseText);
+          resolve(newUrls);
+        } else {
+          reject(xhr.status);
+        }
+      }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+  });
+}
+
+function delay(ms) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, ms);
+  });
+}
+
+function crawlUrls(urls) {
+  var promises = urls.map(function(url, index) {
+    return delay(index * requestDelay) // Delay the requests
+      .then(function() {
+        return crawlUrl(url);
+      });
+  });
+
+  return Promise.all(promises)
+    .then(function(results) {
+      var newUrls = results.reduce(function(acc, urls) {
+        return acc.concat(urls);
+      }, []);
+      var uniqueNewUrls = newUrls.filter(function(url) {
+        return !crawledUrls.has(url);
+      });
+      uniqueNewUrls.forEach(function(url) {
+        crawledUrls.add(url);
+      });
+
+      var remainingUrls = uniqueNewUrls.filter(function(url) {
+        return !urls.includes(url);
+      });
+
+      if (remainingUrls.length > 0) {
+        return crawlUrls(remainingUrls);
+      }
+    })
+    .catch(function(error) {
+      console.error("Error crawling URLs:", error);
+    });
+}
+
+function extractUrlsFromResponse(responseText) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(responseText, "text/html");
+  var anchors = doc.getElementsByTagName("a");
+  var urls = [];
+  for (var i = 0; i < anchors.length; i++) {
+    urls.push(anchors[i].href);
+  }
+  return urls;
+}
+
+var startingUrl = window.location.href;
+var urls = [startingUrl];
+
+crawlUrls(urls)
+  .then(function() {
+    var endTime = performance.now();
+    var duration = endTime - startTime;
+    console.log("Crawling completed in " + duration + " milliseconds.");
+    console.log(Array.from(crawledUrls));
+  });
+```
+</details>
+
+
+<details>
+  <summary>Crawl Entire Website by 3 Pages Simultaneously</summary>
+
+* Total time: 25298.40 milliseconds
+
+```javascript
+let crawledUrls = [];
+let pendingUrls = ['https://www.nr1.nu/'];
+let startTime = performance.now();
+
+const crawl = async () => {
+  while (pendingUrls.length) {
+    let urlsToCrawl = pendingUrls.splice(0, 10); // Number of concurrent requests: 10
+    let crawlPromises = urlsToCrawl.map(async (url) => {
+      if (crawledUrls.includes(url)) return;
+      console.log(`Crawling ${url}`);
+      try {
+        let response = await fetch(url);
+        let text = await response.text();
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(text, 'text/html');
+        let anchors = doc.getElementsByTagName('a');
+        for (let i = 0; i < anchors.length; i++) {
+          let href = anchors[i].href;
+          if (!crawledUrls.includes(href) && !pendingUrls.includes(href)) {
+            pendingUrls.push(href);
+          }
+        }
+      } catch (err) {
+        console.error(`Failed to crawl "${url}": ${err}`);
+      }
+      crawledUrls.push(url);
+    });
+    await Promise.all(crawlPromises);
+  }
+  let endTime = performance.now();
+  let totalTime = endTime - startTime;
+  console.log('Finished crawling');
+  console.log(crawledUrls);
+  console.log(`Total time: ${totalTime.toFixed(2)} milliseconds`);
+};
+
+crawl();
+```
+
+</details>
+
+
+<details>
+  <summary>Crawl Entire Website with 50 Pages Simultaneously</summary>
+
+The provided code showcases a crawling approach that allows the concurrent crawling of 50 pages at once, significantly enhancing the crawling speed. It maintains lists of crawled URLs and pending URLs and outputs the total time taken for the crawling process.
+
+* Total time: 22067.30 milliseconds
+
+```javascript
+let crawledUrls = [];
+let pendingUrls = ['https://www.nr1.nu/'];
+let startTime = performance.now();
+
+const crawl = async () => {
+  while (pendingUrls.length) {
+    let urlsToCrawl = pendingUrls.splice(0, 50); // Number of concurrent requests: 50
+    let crawlPromises = urlsToCrawl.map(async (url) => {
+      if (crawledUrls.includes(url)) return;
+      console.log(`Crawling ${url}`);
+      try {
+        let response = await fetch(url);
+        let text = await response.text();
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(text, 'text/html');
+        let anchors = doc.getElementsByTagName('a');
+        for (let i = 0; i < anchors.length; i++) {
+          let href = anchors[i].href;
+          if (!crawledUrls.includes(href) && !pendingUrls.includes(href)) {
+            pendingUrls.push(href);
+          }
+        }
+      } catch (err) {
+        console.error(`Failed to crawl "${url}": ${err}`);
+      }
+      crawledUrls.push(url);
+    });
+    await Promise.all(crawlPromises);
+  }
+  let endTime = performance.now();
+  let totalTime = endTime - startTime;
+  console.log('Finished crawling');
+  console.log(crawledUrls);
+  console.log(`Total time: ${totalTime.toFixed(2)} milliseconds`);
+};
+
+crawl();
+```
+
+</details>
+
+
+<details>
+  <summary>Crawl entire site and print found URLs only once done</summary>
+
+The provided code showcases a web crawling approach that explores an entire website and ensures that the found URLs are printed only once the crawling process is completed. It prevents duplicate URLs from being processed and guarantees that each URL is printed only once.
+
+* Total time: 36452.39999999851 milliseconds
+
+```javascript
+let crawledUrls = new Set();
+let pendingUrls = ['https://www.nr1.nu/'];
+let startTime = performance.now();
+
+const crawl = async () => {
+  while (pendingUrls.length) {
+    const url = pendingUrls.pop();
+    if (crawledUrls.has(url)) continue; // Avoid re-crawling
+    console.log(`Crawling ${url}`);
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const anchors = doc.getElementsByTagName('a');
+      for (const anchor of anchors) {
+        const href = anchor.href;
+        if (!crawledUrls.has(href) && !pendingUrls.includes(href)) {
+          pendingUrls.push(href);
+        }
+      }
+    } catch (err) {
+      console.error(`Failed to crawl "${url}": ${err}`);
+    }
+    crawledUrls.add(url);
+  }
+  let endTime = performance.now();
+  let totalTime = endTime - startTime;
+  console.log('Finished crawling');
+  console.log(Array.from(crawledUrls));
+  console.log(`Total time: ${totalTime} milliseconds`);
+};
+
+crawl();
+```
+
+</details>
+
+
+
+<details>
+  <summary>Crawl entire website and dump URLs</summary>
+
+The provided code showcases a web crawling approach that crawls an entire website and dumps the URLs found during the process. It ensures that each URL is crawled only once and prevents duplicate URLs from being added to the list of pending URLs.
+
+```javascript
+let crawledUrls = [];
+let pendingUrls = ['https://www.nr1.nu/'];
+
+const crawl = async () => {
+    while (pendingUrls.length) {
+        let url = pendingUrls.pop();
+        if (crawledUrls.includes(url)) continue; // avoid re-crawling
+        console.log(`Crawling ${url}`);
+        try {
+            let response = await fetch(url);
+            let text = await response.text();
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(text, 'text/html');
+            let anchors = doc.getElementsByTagName('a');
+            for (let i = 0; i < anchors.length; i++) {
+                let href = anchors[i].href;
+                if (!crawledUrls.includes(href) && !pendingUrls.includes(href)) pendingUrls.push(href);
+            }
+        } catch (err) {
+            console.error(`Failed to crawl "${url}": ${err}`);
+        }
+        crawledUrls.push(url);
+    }
+    console.log('Finished crawling');
+    console
+
+.log(crawledUrls);
+};
+
+crawl();
+```
+</details>
+
+
+
+<details>
+  <summary>Dump All URLs and Open Them in a New Tab</summary>
+
+The provided code allows for the extraction of all URLs present on a webpage and opens them in a new browser tab. It generates an HTML document in the new tab containing the dumped URLs.
+
+```javascript
+var urls = Array.from(document.getElementsByTagName("a"), function (a) {
+  return a.href;
+});
+
+var newTab = window.open();
+newTab.document.open();
+newTab.document.write("<html><head><title>URL Dump</title></head><body><table>");
+newTab.document.write("<tr><th>URL</th><th>Link</th></tr>");
+for (var i = 0; i < urls.length; i++) {
+  newTab.document.write("<tr><td>" + urls[i] + "</td><td><a href='" + urls[i] + "'>" + urls[i] + "</a></td></tr>");
+}
+newTab.document.write("</table></body></html>");
+newTab.document.close();
+```
+
+</details>
+
+
+<details>
+  <summary>Dump All URLs from a Website in a New Tab with Improved Layout</summary>
+
+The provided code extracts all URLs from a website and opens them in a new browser tab with an enhanced layout. The URLs are displayed in a table format, with the left column showing the URLs as plain text and the right column displaying the URLs as clickable links. The code starts by utilizing the getElementsByTagName method to retrieve all anchor tags (<a>) on the current webpage. It converts the resulting HTMLCollection into an array using Array.from and extracts the href attribute from each anchor tag, representing the URLs.
+
+A new browser tab is opened using the window.open method. The new tab's document is then opened for writing. The code writes an HTML document in the new tab, including a title of "URL Dump" and a style section to define the layout. The table layout is specified using CSS rules, defining the appearance of the table, table cells, and table rows. The URLs are displayed in a two-column table format, with the left column showing the URLs as plain text and the right column displaying the URLs as clickable links.
+
+The code then iterates over the URLs array and writes each URL as a row in the table. Each row consists of two table cells: one displaying the URL as plain text and the other containing an anchor tag with the URL as the link text and target. After completing the table structure, the new tab's document is closed, finalizing the content. The new tab will display the URLs in an organized table layout, providing easy access to the URLs as both plain text and clickable links.
+
+
+
+```javascript
+var urls = Array.from(document.getElementsByTagName("a"), function (a) {
+  return a.href;
+});
+
+var newTab = window.open();
+newTab.document.open();
+newTab.document.write("<html><head><title>URL Dump</title>");
+newTab.document.write("<style>table { border-collapse: collapse; width: 100%; }");
+newTab.document.write("th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }");
+newTab.document.write("tr:hover { background-color: #f5f5f5; }");
+newTab.document.write("a { color: #0000EE; text-decoration: none; }");
+newTab.document.write("</style></head><body><table>");
+newTab.document.write("<tr><th>URL</th><th>Link</th></tr>");
+for (var i = 0; i < urls.length; i++) {
+  newTab.document.write("<tr><td>" + urls[i] + "</td><td><a href='" + urls[i] + "'>" + urls[i] + "</a></td></tr>");
+}
+newTab.document.write("</table></body></html>");
+newTab.document.close();
+```
+
+</details>
+
+
+<details>
+  <summary>Dump All URLs from a Website in a New Tab with Compact Box Layout and Cool Header.</summary>
+
+The provided code extracts all URLs from a website and opens them in a new browser tab with a compact box layout. The URLs are displayed in a table format, with the left column showing the URLs as plain text and the right column displaying the URLs as clickable links. The layout includes a cool header for added style.
+
+The code begins by utilizing the getElementsByTagName method to retrieve all anchor tags (<a>) on the current webpage. It converts the resulting HTMLCollection into an array using Array.from and extracts the href attribute from each anchor tag, representing the URLs.
+
+
+```javascript
+var urls = Array.from(document.getElementsByTagName("a"), function (a) {
+  return a.href;
+});
+
+var newTab = window.open();
+newTab.document.open();
+newTab.document.write("<html><head><title>URL Dump</title>");
+newTab.document.write("<style>table { border-collapse: collapse; width: 100%; }");
+newTab.document.write("th, td { padding: 8px;
+
+ text-align: left; border-bottom: 1px solid #ddd; }");
+newTab.document.write("tr:hover { background-color: #f5f5f5; }");
+newTab.document.write("a { color: #0000EE; text-decoration: none; }");
+newTab.document.write(".header { background-color: #333; color: #FFF; padding: 10px; font-size: 20px; }");
+newTab.document.write("</style></head><body>");
+newTab.document.write("<div class='header'>URL Dump</div>");
+newTab.document.write("<table>");
+newTab.document.write("<tr><th>URL</th><th>Link</th></tr>");
+for (var i = 0; i < urls.length; i++) {
+  newTab.document.write("<tr><td>" + urls[i] + "</td><td><a href='" + urls[i] + "'>" + urls[i] + "</a></td></tr>");
+}
+newTab.document.write("</table></body></html>");
+newTab.document.close();
+```
+
+</details>
+
+
+<details>
+  <summary>Crawl and Recursively Find All URLs within the Initial Webpage URLs</summary>
+
+ The provided code implements a recursive crawling approach to find and extract all URLs within the initial webpage URLs. It utilizes XMLHttpRequest to fetch the webpages, extracts URLs from the responses, and continues crawling recursively until all URLs have been traversed. The crawled URLs are logged at the end.
+
+ During the crawling process, URLs are crawled recursively, and new URLs are added to the urls array for further crawling. If any errors occur during the crawling, they are logged to the console.
+
+```javascript
+var crawledUrls = [];
+var startTime = performance.now();
+
+function crawlUrl(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var responseText = xhr.responseText;
+          var newUrls = extractUrlsFromResponse(responseText);
+          resolve(newUrls);
+        } else {
+          reject(xhr.status);
+        }
+      }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+  });
+}
+
+function crawlUrls(urls) {
+  if (urls.length === 0) {
+    var endTime = performance.now();
+    var duration = endTime - startTime;
+    console.log("Crawling completed in " + duration + " milliseconds.");
+    console.log(crawledUrls);
+    return;
+  }
+
+  var currentUrl = urls.shift();
+  if (crawledUrls.includes(currentUrl)) {
+    crawlUrls(urls);
+    return;
+  }
+
+  crawledUrls.push(currentUrl);
+
+  crawlUrl(currentUrl)
+    .then(function(newUrls) {
+      newUrls.forEach(function(url) {
+        if (!crawledUrls.includes(url)) {
+          urls.push(url);
+        }
+      });
+      crawlUrls(urls);
+    })
+    .catch(function(error) {
+      console.error("Error crawling URL:", currentUrl);
+      crawlUrls(urls);
+    });
+}
+
+function extractUrlsFromResponse(responseText) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(responseText, "text/html");
+  var anchors = doc.getElementsByTagName("a");
+  var urls = [];
+  for (var i = 0; i < anchors.length; i++) {
+    urls.push(anchors[i].href);
+  }
+  return urls;
+}
+
+var startingUrl = window.location.href;
+var urls = [startingUrl];
+
+crawlUrls(urls);
+```
+
+</details>
+
+
+<details>
+  <summary>Parallelized Version of Crawling Using async/await and Promises</summary>
+
+The parallelized version of the crawling code utilizes async/await and Promises to enable concurrent crawling of multiple URLs, significantly reducing the crawling time. By leveraging JavaScript's event loop mechanism, this approach achieves parallelism and completes the crawling process in approximately 8.7 seconds (8685.3 milliseconds) for the website "https://www.nr1.nu".
+
+
+```javascript
+var crawledUrls = [];
+var startTime = performance.now();
+var MAX_CONCURRENT_REQUESTS = 100; // Maximum number of concurrent requests
+
+function crawlUrl(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var responseText = xhr.responseText;
+          var newUrls = extractUrlsFromResponse(responseText);
+          resolve(newUrls);
+        } else {
+          reject(xhr.status);
+        }
+      }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+  });
+}
+
+async function crawlUrls(urls) {
+  if (urls.length === 0) {
+    var endTime = performance.now();
+    var duration = endTime - startTime;
+    console.log("Crawling completed in " + duration + " milliseconds.");
+    console.log(crawledUrls);
+    return;
+  }
+
+  var promises = [];
+  while (urls.length > 0 && promises.length < MAX_CONCURRENT_REQUESTS) {
+    var currentUrl = urls.shift();
+    if (!crawledUrls.includes(currentUrl)) {
+      crawledUrls.push(currentUrl);
+      promises.push(
+        crawlUrl(currentUrl)
+          .then(function(newUrls) {
+            newUrls.forEach(function(url) {
+              if (!crawledUrls.includes(url)) {
+                urls.push(url);
+              }
+            });
+          })
+          .catch(function(error) {
+            console.error("Error crawling URL:", currentUrl);
+          })
+      );
+    }
+  }
+
+  await Promise.all
+
+(promises);
+  crawlUrls(urls);
+}
+
+function extractUrlsFromResponse(responseText) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(responseText, "text/html");
+  var anchors = doc.getElementsByTagName("a");
+  var urls = [];
+  for (var i = 0; i < anchors.length; i++) {
+    urls.push(anchors[i].href);
+  }
+  return urls;
+}
+
+var startingUrl = window.location.href;
+var urls = [startingUrl];
+
+crawlUrls(urls);
+```
+
+</details>
+
+
+
+
+<details>
+  <summary>Crawling Indefinitely until the Last URL</summary>
+
+The provided code demonstrates two examples of crawling until the last URL is reached. The first example utilizes promises and a Set to keep track of the crawled URLs, while the second example uses XMLHttpRequest to fetch the content of each URL. Both examples allow for indefinite crawling until all URLs have been explored.
+
+* Example 1:
+
+The first example uses promises and a Set to crawl indefinitely until the last URL is reached. It starts by defining a Set called crawledUrls to keep track of the crawled URLs. The crawlUrl function returns a promise that fetches the content of a URL using XMLHttpRequest. Upon a successful response, it resolves with an array of new URLs extracted from the response.
+
+The crawlUrls function takes an array of URLs as input. It filters out the URLs that have already been crawled and adds the uncrawled URLs to the crawledUrls set. It then uses Promise.all and maps over the uncrawled URLs to crawl each URL asynchronously. For each URL, it recursively calls the crawlUrls function to crawl the new URLs extracted from the response.
+
+Once all the URLs have been crawled, the execution completes, and the total crawling duration and the crawled URLs are logged to the console.
+
+* Example 2:
+
+The second example crawls all dumped URLs in a single thread. It also uses XMLHttpRequest to fetch the content of each URL and stores the crawled URLs in an array. The completion message includes the crawled URLs.
+
+The crawlUrl function is similar to the first example, returning a promise that fetches the content of a URL using XMLHttpRequest.
+
+The crawlUrls function takes an array of URLs as input. It checks if the array is empty, indicating that all URLs have been crawled. If not, it fetches the content of each URL using the crawlUrl function and recursively calls the crawlUrls function to crawl the new URLs extracted from the response.
+
+Once all the URLs have been crawled, the execution completes, and the total crawling duration and the crawled URLs are logged to the console.
+
+
+
+```javascript
+var crawledUrls = new Set();
+var startTime = performance.now();
+
+function crawlUrl(url) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var responseText = xhr.responseText;
+          var newUrls = extractUrlsFromResponse(responseText);
+          resolve(newUrls);
+        } else {
+          reject(xhr.status);
+        }
+      }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+  });
+}
+
+function crawlUrls(urls) {
+  if (urls.length === 0) {
+    var endTime = performance.now();
+    var duration = endTime - startTime;
+    console.log("Crawling completed in " + duration + " milliseconds.");
+    console.log(Array.from(crawledUrls));
+    return;
+  }
+
+  var uncrawledUrls = urls.filter(url => !crawledUrls.has(url));
+  crawledUrls = new Set([...crawledUrls, ...uncrawledUrls]);
+
+  return Promise.all(uncrawledUrls.map(url => crawlUrl(url)
+    .then(newUrls => {
+      return crawlUrls(newUrls.filter(url => !crawledUrls.has(url)));
+    })
+    .catch(error => {
+      console.error("Error crawling URL:", url);
+    })
+  ));
+}
+
+function extractUrlsFromResponse(responseText) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(responseText, "text/html");
+  var anchors = doc.getElementsByTagName("a");
+  var urls = [];
+  for (var i = 0; i < anchors.length; i++) {
+    urls.push(anchors[i].href);
+  }
+  return urls;
+}
+
+var startingUrl = window.location.href;
+var urls = [startingUrl];
+
+crawlUrls(urls);
+```
+
+</details>
+
+
