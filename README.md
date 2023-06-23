@@ -2,6 +2,10 @@
 
 ### Where Legends Emerge, Leaving No Room For Two! Just one can be Nr1 💜
 
+
+https://github.com/wuseman/JavaScript-Newbie-Cheatsheet-Hacking/assets/26827453/37793b80-1c29-4474-99d3-78ad0a16421e
+
+
 ***
 
  Welcome, fellow coding enthusiasts, to the JavaScript Newbie Cheatsheet Hacking repository! I'm just a JavaScript newbie, bumbling and stumbling my way through the mesmerizing maze of coding. Along the way, I've managed to bungle into some pretty handy tips and tricks, and in the spirit of sharing, I've decided to spill all my beans right here!
