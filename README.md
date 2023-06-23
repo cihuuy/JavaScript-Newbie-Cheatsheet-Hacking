@@ -1,59 +1,67 @@
 # JavaScript - Newbie Cheatsheet | Hacking
 
+### Where Legends Emerge, Leaving No Room For Two! Just one can be Nr1 💜
+
+***
+
+ Welcome, fellow coding enthusiasts, to the JavaScript Newbie Cheatsheet Hacking repository! I'm just a JavaScript newbie, bumbling and stumbling my way through the mesmerizing maze of coding. Along the way, I've managed to bungle into some pretty handy tips and tricks, and in the spirit of sharing, I've decided to spill all my beans right here!
+
+ Over time, as a dedicated tinkerer, I've embraced the wild and wonderful world of JavaScript, using it to poke and prod my own websites, tickle my routers (with their express consent, of course), and more. My syntax? Far from perfect. My code? A delightful hot mess of "wuziduzi world" meets "wuseman's spaghetti that just somehow works". And yet, the discoveries I've made have been astonishing.
+
+ I'm no expert in JavaScript. Heck, I wouldn't even know where to start. But these haphazardly stumbled-upon techniques have served me well, and I reckon there might be a few nuggets of wisdom to be found in my "accidentally-on-purpose" explorations. Hence, the birth of this repository.
+
+This mish-mash of tips and tricks spans across various topics, without any particular focus on a specific level of expertise. They are simply based on my own exhilarating journey of eureka moments and facepalms. I won't be giving detailed lectures here - just quick, practical, ready-to-use snippets that you can plug into your own adventures in code.
+
+ A note of caution though - these tips and tricks may not play nice with unauthorized or not-owned-by-you websites. They've been exclusively tested and tailored to my own online playgrounds. If you choose to release them into the wild, please be responsible and respectful of others' digital territories. I sternly discourage any and all forms of unauthorized activities.
+
+ So, without further ado, enjoy this hotchpotch of JavaScript tips and tricks, handpicked from my personal adventures. If you'd like to contribute, that's great! Just make sure to add your bits in the right order. Spotted a bug? Let me know! I'm always up for a good bug hunt.
+
+***
+
+Remember my dear comrades: hack to learn, **NOT** learn to hack! - **Happy hacking!**
+
+***
+
+## URL Wise
+
 <details>
-
-  <summary><code>About</code></summary>
-
-  Welcome, fellow coding enthusiasts, to the JavaScript Newbie Cheatsheet Hacking repository! I'm just a JavaScript newbie, bumbling and stumbling my way through the mesmerizing maze of coding. Along the way, I've managed to bungle into some pretty handy tips and tricks, and in the spirit of sharing, I've decided to spill all my beans right here!
-
-  Over time, as a dedicated tinkerer, I've embraced the wild and wonderful world of JavaScript, using it to poke and prod my own websites, tickle my routers (with their express consent, of course), and more. My syntax? Far from perfect. My code? A delightful hot mess of "wuziduzi world" meets "wuseman's spaghetti that just somehow works". And yet, the discoveries I've made have been astonishing.
-
-  I'm no expert in JavaScript. Heck, I wouldn't even know where to start. But these haphazardly stumbled-upon techniques have served me well, and I reckon there might be a few nuggets of wisdom to be found in my "accidentally-on-purpose" explorations. Hence, the birth of this repository.
-
-  This mish-mash of tips and tricks spans across various topics, without any particular focus on a specific level of expertise. They are simply based on my own exhilarating journey of eureka moments and facepalms. I won't be giving detailed lectures here - just quick, practical, ready-to-use snippets that you can plug into your own adventures in code.
-
-  A note of caution though - these tips and tricks may not play nice with unauthorized or not-owned-by-you websites. They've been exclusively tested and tailored to my own online playgrounds. If you choose to release them into the wild, please be responsible and respectful of others' digital territories. I sternly discourage any and all forms of unauthorized activities.
-
-  So, without further ado, enjoy this hotchpotch of JavaScript tips and tricks, handpicked from my personal adventures. If you'd like to contribute, that's great! Just make sure to add your bits in the right order. Spotted a bug? Let me know! I'm always up for a good bug hunt.
-</details>
-
-***
-
-Remember my dear comrades: hack to learn, **NOT** learn to hack!
-
-**Happy hacking!**
-
-***
-
-# URL Wise
-
-### Extracting URLs from a Web Page
+  <summary>Extracting URLs from a Web Page</summary>
 
 ```javascript
 Array.from(document.links).forEach(({ href }) => console.log(href));
 ```
 
-### Extracting URLs using Destructuring (Alternative 1)
+</details>
+
+<details>
+  <summary>Extracting URLs using Destructuring (Alternative 1)</summary>
 
 ```javascript
 Array.from(document.links, ({ href }) => href).forEach(console.log);
 ```
 
-### Extracting URLs using the Spread Operator (Alternative 2)
+</details>
+
+<details>
+  <summary>Extracting URLs using the Spread Operator (Alternative 2)</summary>
 
 ```javascript
 [...document.getElementsByTagName('a')].forEach(a => console.log(a.href));
-
-
 ```
 
-### Extracting URLs using Array.from with Mapping (Alternative 3)
+</details>
+
+<details>
+  <summary>Extracting URLs using Array.from with Mapping (Alternative 3)</summary>
 
 ```javascript
 Array.from(document.getElementsByTagName('a'), a => a.href).forEach(url => console.log(url));
 ```
 
-### Extracting URLs using a for...of Loop (Alternative 4)
+</details>
+
+<details>
+  <summary>Extracting URLs using a for...of Loop (Alternative 4)</summary>
 
 ```javascript
 var urls = Array.from(document.getElementsByTagName('a'));
@@ -62,7 +70,145 @@ for (var url of urls) {
 }
 ```
 
-### Find all src URLs
+</details>
+
+<details>
+  <summary>Extracting All Emails from a Web Page</summary>
+
+```javascript
+const regex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+const html = document.documentElement.innerHTML;
+let match;
+while ((match = regex.exec(html))) {
+  console.log(match[0]);
+}
+```
+
+</details>
+
+<details>
+  <summary>Get all image URLs from a web page</summary>
+
+```javascript
+Array.from(document.images).forEach(({ src }) => console.log(src));
+```
+
+</details>
+
+<details>
+  <summary>Get all CSS File URLs</summary>
+
+```javascript
+Array.from(document.styleSheets).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all internal URLs from a web page</summary>
+
+```javascript
+Array.from(document.links).filter(a => a.hostname === location.hostname).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all external URLs from a web page</summary>
+
+```javascript
+Array.from(document.links).filter(a => a.hostname !== location.hostname).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all unique URLs from a web page</summary>
+
+```javascript
+let uniqueURLs = new Set(Array.from(document.links).map(({ href }) => href));
+uniqueURLs.forEach(url => console.log(url));
+```
+
+</details>
+
+<details>
+  <summary>Get all PDF files from a web page</summary>
+
+```javascript
+Array.from(document.links).filter(a => a.href.endsWith('.pdf')).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all file download links</summary>
+
+```javascript
+Array.from(document.querySelectorAll('a[download]')).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all mailto links</summary>
+
+```javascript
+Array.from(document.querySelectorAll('a[href^="mailto:"]')).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all tel links</summary>
+
+```javascript
+Array.from(document.querySelectorAll('a[href^="tel:"]')).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all URLs having certain text</summary>
+
+```javascript
+Array.from(document.links).filter(a => a.innerText.includes('text')).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get all hashtags from a webpage</summary>
+
+```javascript
+Array.from(document.querySelectorAll('a[href^="#"]')).forEach(({ href }) => console.log(href));
+```
+
+</details>
+
+<details>
+  <summary>Get URLs of all open tabs</summary>
+
+```javascript
+chrome.tabs.query({}, function(tabs) {
+  tabs.forEach(tab => console.log(tab.url));
+});
+```
+
+</details>
+
+<details>
+  <summary>Get URLs of all iframes on a page</summary>
+
+```javascript
+Array.from(document.querySelectorAll('iframe')).forEach(({ src }) => console.log(src));
+```
+
+</details>
+
+
+<details>
+  <summary>Find all src URLs</summary>
 
 ```javascript
 // Select all relevant HTML elements that may have src attributes
@@ -78,7 +224,10 @@ for (var i = 0; i < elementsWithSrc.length; i++) {
 }
 ```
 
-### Get all URLs (XPath)
+</details>
+
+<details>
+  <summary>Get all URLs (XPath)</summary>
 
 ```javascript
 const xpathResult = document.evaluate('//a', document, null, XPathResult.ANY_TYPE, null);
@@ -89,7 +238,10 @@ while (node) {
 }
 ```
 
-### Get all URLs (jQuery)
+</details>
+
+<details>
+  <summary>Get all URLs (jQuery)</summary>
 
 ```javascript
 document.querySelectorAll('a').forEach(function(a) {
@@ -97,7 +249,10 @@ document.querySelectorAll('a').forEach(function(a) {
 });
 ```
 
-### Get all URLs (Alternative 7: Regular Expression)
+</details>
+
+<details>
+  <summary>Get all URLs (Alternative 7: Regular Expression)</summary>
 
 ```javascript
 const regex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g;
@@ -108,7 +263,10 @@ while ((match = regex.exec(html))) {
 }
 ```
 
-### Get all URLs (Fetch API)
+</details>
+
+<details>
+  <summary>Get all URLs (Fetch API)</summary>
 
 ```javascript
 fetch(document.location.href)
@@ -122,7 +280,10 @@ fetch(document.location.href)
   });
 ```
 
-### Get All API Endpoints from JavaScript Files
+</details>
+
+<details>
+  <summary>Get All API Endpoints from JavaScript Files</summary>
 
 ```javascript
 fetch(document.location.href)
@@ -142,101 +303,10 @@ fetch(document.location.href)
 });
 ```
 
-### Extracting All Emails from a Web Page 
+</details>
 
-```javascript
-const regex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-const html = document.documentElement.innerHTML;
-let match;
-while ((match = regex.exec(html))) {
-  console.log(match[0]);
-}
-```
-
-### Get all image URLs from a web page
-
-```javascript
-Array.from(document.images).forEach(({ src }) => console.log(src));
-```
-
-### Get all CSS File URLs
-
-```javascript
-Array.from(document.styleSheets).forEach(({ href }) => console.log(href));
-```
-
-### Get all internal URLs from a web page
-
-```javascript
-Array.from(document.links).filter(a => a.hostname === location.hostname).forEach(({ href }) => console.log(href));
-```
-
-### Get all external URLs from a web page
-
-```javascript
-Array.from(document.links).filter(a => a.hostname !== location.hostname).forEach(({ href }) => console.log(href));
-```
-
-### Get all unique URLs from a web page
-
-```javascript
-let unique
-
-URLs = new Set(Array.from(document.links).map(({ href }) => href));
-uniqueURLs.forEach(url => console.log(url));
-```
-
-### Get all PDF files from a web page
-
-```javascript
-Array.from(document.links).filter(a => a.href.endsWith('.pdf')).forEach(({ href }) => console.log(href));
-```
-
-### Get all file download links
-
-```javascript
-Array.from(document.querySelectorAll('a[download]')).forEach(({ href }) => console.log(href));
-```
-
-### Get all mailto links
-
-```javascript
-Array.from(document.querySelectorAll('a[href^="mailto:"]')).forEach(({ href }) => console.log(href));
-```
-
-### Get all tel links
-
-```javascript
-Array.from(document.querySelectorAll('a[href^="tel:"]')).forEach(({ href }) => console.log(href));
-```
-
-### Get all URLs having certain text
-
-```javascript
-Array.from(document.links).filter(a => a.innerText.includes('text')).forEach(({ href }) => console.log(href));
-```
-
-### Get all hashtags from a webpage
-
-```javascript
-Array.from(document.querySelectorAll('a[href^="#"]')).forEach(({ href }) => console.log(href));
-```
-
-### Get URLs of all open tabs
-
-```javascript
-chrome.tabs.query({}, function(tabs) {
-  tabs.forEach(tab => console.log(tab.url));
-});
-```
-
-### Get URLs of all iframes on a page
-
-```javascript
-Array.from(document.querySelectorAll('iframe')).forEach(({ src }) => console.log(src));
-```
-
-### Get all URLs from CSS
+<details>
+  <summary>Get all URLs from CSS</summary>
 
 ```javascript
 Array.from(document.styleSheets).forEach(styleSheet => {
@@ -252,7 +322,10 @@ Array.from(document.styleSheets).forEach(styleSheet => {
 });
 ```
 
-### Extract URLs from Inline JavaScript
+</details>
+
+<details>
+  <summary>Extract URLs from Inline JavaScript</summary>
 
 ```javascript
 const regex = /url\s*\(\s*(['"]?)(.*?)\1\s*\)/g;
@@ -263,10 +336,15 @@ while ((match = regex.exec(html))) {
 }
 ```
 
-### Extracting URLs from HTML Comments
+</details>
+
+<details>
+  <summary>Extracting URLs from HTML Comments</summary>
 
 ```javascript
-const regex = /<!--.*?(\bhttps?:\/\/\S+)\b.*?-->/g;
+const regex = /<!--.*?(\b
+
+https?:\/\/\S+)\b.*?-->/g;
 const html = document.documentElement.innerHTML;
 let match;
 while ((match = regex.exec(html))) {
@@ -274,13 +352,19 @@ while ((match = regex.exec(html))) {
 }
 ```
 
-### Extract URLs from SVG
+</details>
+
+<details>
+  <summary>Extract URLs from SVG</summary>
 
 ```javascript
 Array.from(document.getElementsByTagName('image')).forEach(({ href }) => console.log(href));
 ```
 
-### Extracting Specific Parts of a URL
+</details>
+
+<details>
+  <summary>Extracting Specific Parts of a URL</summary>
 
 ```javascript
 function extractDomain(url) {
@@ -308,13 +392,19 @@ console.log('Protocol:', extractProtocol(url));
 console.log('Path:', extractPath(url));
 ```
 
-### URL Redirection
+</details>
+
+<details>
+  <summary>URL Redirection</summary>
 
 ```javascript
 window.location.href = 'https://www.newurl.com';
 ```
 
-### Add URL parameter
+</details>
+
+<details>
+  <summary>Add URL parameter</summary>
 
 ```javascript
 function addUrlParameter(url, parameterName, parameterValue) {
@@ -327,7 +417,10 @@ const modifiedUrl = addUrlParameter(originalUrl, 'param', 'value');
 console.log(modifiedUrl);
 ```
 
-### Remove URL Parameter
+</details>
+
+<details>
+  <summary>Remove URL Parameter</summary>
 
 ```javascript
 function removeUrlParameter(url, parameterName) {
@@ -356,7 +449,10 @@ const modifiedUrl = removeUrlParameter(originalUrl, 'param2');
 console.log(modifiedUrl);
 ```
 
-### Extract all URLs from a Website recursive (Separate Lines)
+</details>
+
+<details>
+  <summary>Extract all URLs from a Website recursive (Separate Lines)</summary>
 
 ```javascript
 // Function to extract the domain from a URL
@@ -370,7 +466,9 @@ function extractDomain(url) {
 function extractURLsSeparateLines() {
   const allURLs = [];
 
-  // Retrieve all anchor elements on the page
+  //
+
+ Retrieve all anchor elements on the page
   const anchorElements = document.getElementsByTagName('a');
 
   // Extract URLs
@@ -421,8 +519,10 @@ function crawlWebsite(currentURL) {
 // Call the function to start crawling the website from the current page
 crawlWebsite(window.location.href);
 ```
+</details>
 
-### Extract all URLs from a Website (Filtered by Domain)
+<details>
+  <summary>Extract all URLs from a Website (Filtered by Domain)</summary>
 
 ```javascript
 // Function to extract the domain from a URL
@@ -463,7 +563,10 @@ const filteredURLs = extractURLsByDomain(targetDomain);
 console.log(`Extracted URLs for domain ${targetDomain}:`, filteredURLs);
 ```
 
-### Extract all URLs from a Website (External URLs Only)
+</details>
+
+<details>
+  <summary>Extract all URLs from a Website (External URLs Only)</summary>
 
 ```javascript
 // Function to extract the domain from a URL
@@ -501,7 +604,10 @@ const externalURLs = extractExternalURLs();
 console.log('Extracted External URLs:', externalURLs);
 ```
 
-### Extract all URLs from a Website (Unique URLs Only)
+</details>
+
+<details>
+  <summary>Extract all URLs from a Website (Unique URLs Only)</summary>
 
 ```javascript
 // Function to extract the domain from a URL
@@ -523,7 +629,9 @@ function extractUniqueURLs() {
     const href = anchorElements[i].href;
     const domain = extractDomain(href);
 
-    // Check if the URL is already in the array
+    // Check if the URL is already in the
+
+ array
     if (allURLs.indexOf(href) === -1) {
       allURLs.push(href);
     }
@@ -536,12 +644,13 @@ function extractUniqueURLs() {
 const uniqueURLs = extractUniqueURLs();
 
 // Log the extracted unique URLs to the console
-console.log('
-
-Extracted Unique URLs:', uniqueURLs);
+console.log('Extracted Unique URLs:', uniqueURLs);
 ```
 
-### Extract all URLs from Images
+</details>
+
+<details>
+  <summary>Extract all URLs from Images</summary>
 
 ```javascript
 // Function to extract all URLs from images on a website
@@ -569,7 +678,10 @@ const imageURLs = extractImageURLs();
 console.log('Extracted Image URLs:', imageURLs);
 ```
 
-### Extract all URLs from Scripts
+</details>
+
+<details>
+  <summary>Extract all URLs from Scripts</summary>
 
 ```javascript
 // Function to extract all URLs from scripts on a website
@@ -597,7 +709,10 @@ const scriptURLs = extractScriptURLs();
 console.log('Extracted Script URLs:', scriptURLs);
 ```
 
-### Extract all URLs from Stylesheets
+</details>
+
+<details>
+  <summary>Extract all URLs from Stylesheets</summary>
 
 ```javascript
 // Function to extract all URLs from stylesheets on a website
@@ -625,7 +740,10 @@ const stylesheetURLs = extractStylesheetURLs();
 console.log('Extracted Stylesheet URLs:', stylesheetURLs);
 ```
 
-### Extract all URLs from AJAX or Fetch Requests
+</details>
+
+<details>
+  <summary>Extract all URLs from AJAX or Fetch Requests</summary>
 
 ```javascript
 // Function to extract all URLs from dynamically loaded resources via AJAX or fetch requests
@@ -650,13 +768,18 @@ function extractDynamicURLs(urls) {
 const ajaxURLs = ['https://somesite.com/api/data', 'https://somesite.com/api/users'];
 
 // Call the function to extract URLs from AJAX or fetch requests
-const dynamicURLs = extractDynamicURLs(ajaxURLs);
+const
+
+ dynamicURLs = extractDynamicURLs(ajaxURLs);
 
 // Log the extracted URLs to the console
 console.log('Extracted URLs from AJAX or Fetch Requests:', dynamicURLs);
 ```
 
-### Extract all URLs from Attachments or Downloadable Files
+</details>
+
+<details>
+  <summary>Extract all URLs from Attachments or Downloadable Files</summary>
 
 ```javascript
 // Function to extract all URLs from attachments or downloadable files on a website
@@ -664,9 +787,7 @@ function extractAttachmentURLs() {
   const allURLs = [];
 
   // Retrieve all attachment or downloadable file elements on the page
-  const attachmentElements = document.querySelectorAll('a[download], a[href*=".pdf
-
-"], a[href*=".doc"], a[href*=".xls"], a[href*=".zip"]');
+  const attachmentElements = document.querySelectorAll('a[download], a[href*=".pdf"], a[href*=".doc"], a[href*=".xls"], a[href*=".zip"]');
 
   // Extract URLs
   for (let i = 0; i < attachmentElements.length; i++) {
@@ -685,8 +806,10 @@ const attachmentURLs = extractAttachmentURLs();
 // Log the extracted attachment URLs to the console
 console.log('Extracted Attachment URLs:', attachmentURLs);
 ```
+</details>
 
-### Locate Users by ID Without Overloading the Website
+<details>
+  <summary>Locate Users by ID Without Overloading the Website</summary>
 
 This approach is designed to efficiently find the highest user ID when we do not have a clear starting point. It aims to avoid putting excessive load on the server, thus preventing a potentially negative impact on the site's performance.
 
@@ -724,11 +847,12 @@ async function crawlUsersById(startId, endId) {
 // Usage: crawlUsersById(startId, endId);
 crawlUsersById(1, 999999);
 ```
+</details>
 
+<details>
+  <summary>Optimized Search for the Last User ID on a Website</summary>
 
-### Optimized Search for the Last User ID on a Website
-
-This method uses a balanced approach to discover the largest user ID on a website, when there is no initial indication of its value. The strategy aims to minimize the potential strain on the website by avoiding excessive requests.
+This method uses a balanced approach to discover the largest user ID on a website when there is no initial indication of its value. The strategy aims to minimize the potential strain on the website by avoiding excessive requests.
 
 ```javascript
 async function findLastUser() {
@@ -744,7 +868,9 @@ async function findLastUser() {
       const response = await fetch(url, {
         headers: {
           "accept": "application/json, text/plain, */*",
-          "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+          "sec-ch-ua": "\"Not.A/
+
+Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
         },
         referrer: `https://somewebsite/user/${midId}/edit`,
         referrerPolicy: "strict-origin-when-cross-origin",
@@ -774,3 +900,8 @@ async function findLastUser() {
 // Usage: findLastUser();
 findLastUser();
 ```
+
+</details>
+
+
+## Crawling 
