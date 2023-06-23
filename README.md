@@ -1,10 +1,6 @@
 # JavaScript - Newbie Cheatsheet | Hacking
 
-### Where Legends Emerge, Leaving No Room For Two! Just one can be Nr1 💜
-
-
 https://github.com/wuseman/JavaScript-Newbie-Cheatsheet-Hacking/assets/26827453/37793b80-1c29-4474-99d3-78ad0a16421e
-
 
 ***
 
